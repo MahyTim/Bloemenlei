@@ -11,5 +11,6 @@
             _naam = naam;
             _communicatie = communicatie;
         }
+
     }
 }

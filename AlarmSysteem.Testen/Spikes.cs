@@ -18,18 +18,16 @@ namespace Beveiliging.Testen
             var onderwerp = new HueLampCommunicatieViaHttp(opties, 1);
 
             await onderwerp.Zet(Helderheid.Maximum);
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
             Assert.Equal(Helderheid.Maximum, await onderwerp.Lees());
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
             await onderwerp.Zet(Helderheid.Minimum);
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
             Assert.Equal(Helderheid.Minimum, await onderwerp.Lees());
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
             await onderwerp.Zet(Helderheid.Maximum);
-
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
             await onderwerp.Zet(new Helderheid(50));
-
         }
     }
 }
