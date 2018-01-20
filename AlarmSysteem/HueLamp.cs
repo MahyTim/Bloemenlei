@@ -1,4 +1,6 @@
-﻿namespace Beveiliging
+﻿using System.Threading.Tasks;
+
+namespace Beveiliging
 {
     public class HueLamp
     {
@@ -12,5 +14,15 @@
             _communicatie = communicatie;
         }
 
+        public async Task Communiceer(HueLampHelderheid nieuweHelderHeid)
+        {
+            await _communicatie.Zet(nieuweHelderHeid);
+        }
+
+        public override string ToString()
+        {
+            var status = _communicatie.Lees().Result.Waarde > 0 ? "aan" : "uit";
+            return $"Lamp '{_naam}' is '{status}'";
+        }
     }
 }

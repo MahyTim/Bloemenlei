@@ -4,13 +4,13 @@ namespace Beveiliging.Testen
 {
     public class FakeHueLampCommunicatie : IHueLampCommunicatie
     {
-        private Helderheid _current;
-        public Task<Helderheid> Lees()
+        private HueLampHelderheid _current;
+        public Task<HueLampHelderheid> Lees()
         {
             return Task.FromResult(_current);
         }
 
-        public async Task Zet(Helderheid waarde)
+        public async Task Zet(HueLampHelderheid waarde)
         {
             _current = waarde;
         }

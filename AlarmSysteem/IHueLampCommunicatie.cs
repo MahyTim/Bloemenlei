@@ -4,7 +4,7 @@ namespace Beveiliging
 {
     public interface IHueLampCommunicatie
     {
-        Task<Helderheid> Lees();
-        Task Zet(Helderheid waarde);
+        Task<HueLampHelderheid> Lees();
+        Task Zet(HueLampHelderheid waarde);
     }
 }

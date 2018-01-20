@@ -17,17 +17,17 @@ namespace Beveiliging.Testen
             };
             var onderwerp = new HueLampCommunicatieViaHttp(opties, 1);
 
-            await onderwerp.Zet(Helderheid.Maximum);
+            await onderwerp.Zet(HueLampHelderheid.Maximum);
             Thread.Sleep(5000);
-            Assert.Equal(Helderheid.Maximum, await onderwerp.Lees());
+            Assert.Equal(HueLampHelderheid.Maximum, await onderwerp.Lees());
             Thread.Sleep(5000);
-            await onderwerp.Zet(Helderheid.Minimum);
+            await onderwerp.Zet(HueLampHelderheid.Minimum);
             Thread.Sleep(5000);
-            Assert.Equal(Helderheid.Minimum, await onderwerp.Lees());
+            Assert.Equal(HueLampHelderheid.Minimum, await onderwerp.Lees());
             Thread.Sleep(5000);
-            await onderwerp.Zet(Helderheid.Maximum);
+            await onderwerp.Zet(HueLampHelderheid.Maximum);
             Thread.Sleep(5000);
-            await onderwerp.Zet(new Helderheid(50));
+            await onderwerp.Zet(new HueLampHelderheid(50));
         }
     }
 }

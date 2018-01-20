@@ -16,7 +16,7 @@ namespace Beveiliging
             _nummer = nummer;
         }
 
-        public async Task<Helderheid> Lees()
+        public async Task<HueLampHelderheid> Lees()
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
@@ -25,16 +25,16 @@ namespace Beveiliging
             var response = await client.GetStringAsync($"{_opties.Url}/api/{_opties.Gebruiker}/lights/{_nummer}");
             var jsonResponse = JToken.Parse(response);
             var on = bool.Parse(jsonResponse["state"]["on"].Value<string>());
-            return on == false ? Helderheid.Minimum : new Helderheid(uint.Parse(jsonResponse["state"]["bri"].Value<string>()));
+            return on == false ? HueLampHelderheid.Minimum : new HueLampHelderheid(uint.Parse(jsonResponse["state"]["bri"].Value<string>()));
         }
 
-        public async Task Zet(Helderheid waarde)
+        public async Task Zet(HueLampHelderheid waarde)
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var json = waarde.Equals(Helderheid.Minimum) ? JToken.FromObject(new { on = false }) : JToken.FromObject(new
+            var json = waarde.Equals(HueLampHelderheid.Minimum) ? JToken.FromObject(new { on = false }) : JToken.FromObject(new
             {
                 on = true,
                 bri = waarde.Waarde
