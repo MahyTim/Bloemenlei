@@ -1,29 +1,10 @@
 ﻿using Beveiliging.Communicatie;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Beveiliging.Scenarios
 {
-    public class ScenarioBouwer
-    {
-        private readonly IHueLampCommunicatie _hueLampCommunicatie;
-        private readonly Func<Scenario,Scenario> _onCreated;
-        private readonly string _omschrijving;
-
-        public ScenarioBouwer(string omschrijving, IHueLampCommunicatie hueLampCommunicatie,Func<Scenario,Scenario> onCreated)
-        {
-            _hueLampCommunicatie = hueLampCommunicatie;
-            _onCreated = onCreated;
-            _omschrijving = omschrijving;
-        }
-
-        public AlsSensorDanLampAanScenario AlsDan()
-        {
-            return _onCreated( new AlsSensorDanLampAanScenario(_omschrijving, _hueLampCommunicatie)) as AlsSensorDanLampAanScenario;
-        }
-    }
 
     public class AlsSensorDanLampAanScenario : Scenario
     {
@@ -66,7 +47,19 @@ namespace Beveiliging.Scenarios
         }
         public override bool MoetAfspelen(AanUitSensor sensor, AanUitWaarde waarde)
         {
-            return _alsSensoren.Any(z => z.Sensor == sensor && z.Waarde == waarde);
+            return _alsSensoren.Any() == false || _alsSensoren.Any(z => z.Sensor == sensor && z.Waarde == waarde);
+        }
+
+        private class DanHueLamp
+        {
+            public HueLamp Lamp { get; set; }
+            public HueLampHelderheid Helderheid { get; set; }
+        }
+
+        private class AlsSensor
+        {
+            public AanUitSensor Sensor { get; set; }
+            public AanUitWaarde Waarde { get; set; }
         }
     }
 }
