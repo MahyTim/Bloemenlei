@@ -17,8 +17,9 @@ namespace Beveiliging.Testen
                 BureauSensor = BewegingSensor("bureausensor");
 
                 Scenario("LampAanBijBeweging")
-                    .Als(BureauSensor, AanUitWaarde.Aan)
-                    .Dan(BureauLamp, HueLampHelderheid.Maximum);
+                    .AlsDan()
+                        .Als(BureauSensor, AanUitWaarde.Aan)
+                        .Dan(BureauLamp, HueLampHelderheid.Maximum);
             }
         }
 

@@ -15,17 +15,17 @@ namespace Beveiliging
         private readonly List<AanUitSensor> _aanUitSensoren = new List<AanUitSensor>();
         private readonly List<Scenario> _scenarios = new List<Scenario>();
         private readonly IHueLampCommunicatie _lampCommunicatie;
-        private readonly IAanUitSensorCommunicatie aanUitSensorCommunicatie;
+        private readonly IAanUitSensorCommunicatie _aanUitSensorCommunicatie;
 
-        public AlarmSysteem(IHueLampCommunicatie lampCommunicatie, IAanUitSensorCommunicatie communicatie)
+        public AlarmSysteem(IHueLampCommunicatie lampCommunicatie, IAanUitSensorCommunicatie aanUitSensorCommunicatie)
         {
             this._lampCommunicatie = lampCommunicatie;
+            this._aanUitSensorCommunicatie = aanUitSensorCommunicatie;
         }
 
-        protected AlsSensorDanLampAanScenario Scenario(string omschrijving)
+        protected ScenarioBouwer Scenario(string omschrijving)
         {
-            return _scenarios.OfType<AlsSensorDanLampAanScenario>().FirstOrDefault(z => z.Omschrijving == omschrijving) ??
-                   _scenarios.AddAndReturn(new AlsSensorDanLampAanScenario(omschrijving, _lampCommunicatie));
+            return new ScenarioBouwer(omschrijving, _lampCommunicatie, (s) => _scenarios.AddAndReturn(s));
         }
 
         protected AanUitSensor BewegingSensor(string naam)
