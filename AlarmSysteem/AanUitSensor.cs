@@ -3,12 +3,10 @@
     public class AanUitSensor
     {
         public string Naam { get; }
-        public IAanUitSensorCommunicatie Communicatie { get; }
 
-        public AanUitSensor(string naam,IAanUitSensorCommunicatie communicatie)
+        public AanUitSensor(string naam)
         {
             Naam = naam;
-            Communicatie = communicatie;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Beveiliging
+﻿namespace Beveiliging.Communicatie
 {
     public class HueLampCommunicatieViaHttpOpties
     {

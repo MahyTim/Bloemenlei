@@ -3,32 +3,30 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace Beveiliging
+namespace Beveiliging.Communicatie
 {
     public class HueLampCommunicatieViaHttp : IHueLampCommunicatie
     {
         private readonly HueLampCommunicatieViaHttpOpties _opties;
-        private readonly int _nummer;
 
-        public HueLampCommunicatieViaHttp(HueLampCommunicatieViaHttpOpties opties, int nummer)
+        public HueLampCommunicatieViaHttp(HueLampCommunicatieViaHttpOpties opties)
         {
             _opties = opties;
-            _nummer = nummer;
         }
 
-        public async Task<HueLampHelderheid> Lees()
+        public async Task<HueLampHelderheid> Lees(HueLamp lamp)
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var response = await client.GetStringAsync($"{_opties.Url}/api/{_opties.Gebruiker}/lights/{_nummer}");
+            var response = await client.GetStringAsync($"{_opties.Url}/api/{_opties.Gebruiker}/lights/{lamp.Nummer.Waarde}");
             var jsonResponse = JToken.Parse(response);
             var on = bool.Parse(jsonResponse["state"]["on"].Value<string>());
             return on == false ? HueLampHelderheid.Minimum : new HueLampHelderheid(uint.Parse(jsonResponse["state"]["bri"].Value<string>()));
         }
 
-        public async Task Zet(HueLampHelderheid waarde)
+        public async Task Zet(HueLamp lamp, HueLampHelderheid waarde)
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
@@ -41,7 +39,7 @@ namespace Beveiliging
             });
 
             var message = new HttpRequestMessage(HttpMethod.Put,
-                $"{_opties.Url}/api/{_opties.Gebruiker}/lights/{_nummer}/state")
+                $"{_opties.Url}/api/{_opties.Gebruiker}/lights/{lamp.Nummer.Waarde}/state")
             {
                 Content = new StringContent(json.ToString())
             };

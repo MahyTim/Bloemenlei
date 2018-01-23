@@ -11,10 +11,10 @@ namespace Beveiliging.Testen
             public HueLamp BureauLamp;
             public AanUitSensor BureauSensor;
 
-            public DummyAlarmSysteem()
+            public DummyAlarmSysteem(FakeHueLampCommunicatie communicatie) : base(communicatie, new FakeAanUitSensorCommunicatie())
             {
-                BureauLamp = HueLamp("bureaulamp", new FakeHueLampCommunicatie());
-                BureauSensor = BewegingSensor("bureausensor", new FakeAanUitSensorCommunicatie());
+                BureauLamp = HueLamp("bureaulamp", new HueLampNummer(1));
+                BureauSensor = BewegingSensor("bureausensor");
 
                 Scenario("LampAanBijBeweging")
                     .Als(BureauSensor, AanUitWaarde.Aan)
@@ -25,17 +25,19 @@ namespace Beveiliging.Testen
         [Fact]
         public async Task Test_Lamp_Gaat_Aan_Bij_Beweging()
         {
-            var onderwerp = new DummyAlarmSysteem();
+            var communicatie = new FakeHueLampCommunicatie();
+            var onderwerp = new DummyAlarmSysteem(communicatie);
             var afgespeeldeScenarios = await onderwerp.Ontvang(onderwerp.BureauSensor, AanUitWaarde.Aan);
 
             Assert.Single(afgespeeldeScenarios);
-            Assert.Equal("Lamp 'bureaulamp' is 'aan'", onderwerp.BureauLamp.ToString());
+
+            Assert.Equal(HueLampHelderheid.Maximum, (await communicatie.Lees(onderwerp.BureauLamp)));
         }
 
         [Fact]
         public async Task Test_Lamp_Gaat_Niet_Aan_Bij_Geen_Beweging()
         {
-            var onderwerp = new DummyAlarmSysteem();
+            var onderwerp = new DummyAlarmSysteem(new FakeHueLampCommunicatie());
             var afgespeeldeScenarios = await onderwerp.Ontvang(onderwerp.BureauSensor, AanUitWaarde.Uit);
             Assert.Empty(afgespeeldeScenarios);
         }

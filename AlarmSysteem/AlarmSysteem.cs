@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Beveiliging.Communicatie;
+using Beveiliging.Scenarios;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
@@ -12,24 +14,31 @@ namespace Beveiliging
         private readonly List<HueLamp> _hueLampen = new List<HueLamp>();
         private readonly List<AanUitSensor> _aanUitSensoren = new List<AanUitSensor>();
         private readonly List<Scenario> _scenarios = new List<Scenario>();
+        private readonly IHueLampCommunicatie _lampCommunicatie;
+        private readonly IAanUitSensorCommunicatie aanUitSensorCommunicatie;
 
-        protected Scenario Scenario(string naam)
+        public AlarmSysteem(IHueLampCommunicatie lampCommunicatie, IAanUitSensorCommunicatie communicatie)
         {
-            return _scenarios.FirstOrDefault(z => z.Naam == naam) ??
-                   _scenarios.AddAndReturn(new Scenario(naam));
+            this._lampCommunicatie = lampCommunicatie;
         }
 
-        protected AanUitSensor BewegingSensor(string naam, IAanUitSensorCommunicatie communicatie)
+        protected AlsSensorDanLampAanScenario Scenario(string omschrijving)
+        {
+            return _scenarios.OfType<AlsSensorDanLampAanScenario>().FirstOrDefault(z => z.Omschrijving == omschrijving) ??
+                   _scenarios.AddAndReturn(new AlsSensorDanLampAanScenario(omschrijving, _lampCommunicatie));
+        }
+
+        protected AanUitSensor BewegingSensor(string naam)
         {
             return _aanUitSensoren.FirstOrDefault(z => z.Naam == naam) ??
-                   _aanUitSensoren.AddAndReturn(new AanUitSensor(naam, communicatie));
+                   _aanUitSensoren.AddAndReturn(new AanUitSensor(naam));
 
         }
 
-        protected HueLamp HueLamp(string naam, IHueLampCommunicatie communicatie)
+        protected HueLamp HueLamp(string naam, HueLampNummer nummer)
         {
-            return _hueLampen.FirstOrDefault(z => z.Naam == naam) ??
-                   _hueLampen.AddAndReturn(new HueLamp(naam, communicatie));
+            return _hueLampen.FirstOrDefault(z => z.Omschrijving == naam) ??
+                   _hueLampen.AddAndReturn(new HueLamp(naam, nummer));
         }
 
         public async Task<Scenario[]> Ontvang(AanUitSensor sensor, AanUitWaarde waarde)
